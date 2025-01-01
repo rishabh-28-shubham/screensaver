@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 export default function Screensaver() {
     const [isActive, setIsActive] = useState(false);
-    const [position, setPosition] = useState(new Date());
+    const [time , setTime] = useState(new Date());
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -49,7 +49,7 @@ export default function Screensaver() {
                 fontFamily: "monospace",
             }}
         >
-            {time.toLocateTimeString()}
+            {time.toLocaleTimeString()}
         </div>
     );
 }
