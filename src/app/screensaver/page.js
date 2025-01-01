@@ -1,11 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function Screensaver() {
     const [isActive, setIsActive] = useState(false);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [position, setPosition] = useState(new Date());
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -23,22 +23,17 @@ export default function Screensaver() {
     }, []);
 
     useEffect(() => {
-        if (isActive) {
-            const interval = setInterval(() => {
-                setPosition({
-                    x: Math.random() * window.innerWidth,
-                    y: Math.random() * window.innerHeight,
-                });
-            }, 1000);
-
-            return () => clearInterval(interval);
-        }
-    }, [isActive]);
+        const timer = setInterval(() => {
+            setTime(new Date());
+        }, 1000);
+        
+        return () => clearInterval(timer);
+    }, []);
 
     if (!isActive) return null;
 
     return (
-        <motion.div
+        <div
             style={{
                 position: "fixed",
                 top: 0,
@@ -49,21 +44,18 @@ export default function Screensaver() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                overflow: "hidden",
+                color: "white",
+                fontSize: "5rem",
+                fontFamily: "monospace",
             }}
         >
-            <motion.div
-                animate={{
-                    x: position.x,
-                    y: position.y,
-                }}
-                style={{
-                    width: 50,
-                    height: 50,
-                    background: "red",
-                    borderRadius: "50%",
-                }}
-            />
-        </motion.div>
+            {time.toLocateTimeString()}
+        </div>
     );
 }
+
+//Description of this code
+
+// 1. tracks user inactivity to trigger the Screensaver
+// 2. dispalys the current time in a large, centered font.
+// 3. the time udates every second using setInterval.
