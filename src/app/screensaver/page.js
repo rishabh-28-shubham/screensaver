@@ -18,7 +18,7 @@ export default function Screensaver() {
         if (!hasStartedManually) {
             const timeout = setTimeout(() => {
                 setIsActive(true);
-            }, 5000);
+            }, 10000);
 
             return () => clearTimeout(timeout); // Clear timeout when dependencies change
         }
