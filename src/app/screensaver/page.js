@@ -7,32 +7,30 @@ export default function Screensaver() {
     const [time, setTime] = useState(null); // Tracks the current time
     const [backgroundImage, setBackgroundImage] = useState(""); // Stores the uploaded background image URL
     const [hasStartedManually, setHasStartedManually] = useState(false); // Tracks if screensaver was started manually
-    const [timeoutId, setTimeoutId] = useState(null); // Stores the timeout ID for inactivity
 
     useEffect(() => {
-        // Ensure time is set only on the client
+        // Set initial time on the client side
         setTime(new Date());
+    }, []);
 
+    useEffect(() => {
+        // Start screensaver after 5 seconds of inactivity if not started manually
         if (!hasStartedManually) {
             const timeout = setTimeout(() => {
                 setIsActive(true);
-            }, 5000); // 5 seconds of inactivity triggers the screensaver
+            }, 5000);
 
-            setTimeoutId(timeout); // Save timeout ID
+            return () => clearTimeout(timeout); // Clear timeout when dependencies change
         }
+    }, [hasStartedManually]);
 
-        return () => clearTimeout(timeoutId); // Clear timeout when component unmounts or dependency changes
-    }, [hasStartedManually, timeoutId]);
-
-    // Update time every second
     useEffect(() => {
-        if (typeof window !== "undefined") {
-            const timer = setInterval(() => {
-                setTime(new Date());
-            }, 1000);
+        // Update time every second only on the client side
+        const timer = setInterval(() => {
+            setTime(new Date());
+        }, 1000);
 
-            return () => clearInterval(timer);
-        }
+        return () => clearInterval(timer);
     }, []);
 
     // Function to handle image upload
@@ -47,7 +45,6 @@ export default function Screensaver() {
     // Function to manually activate screensaver
     const startScreensaver = () => {
         setHasStartedManually(true); // Prevent automatic activation
-        clearTimeout(timeoutId); // Clear the inactivity timeout
         setIsActive(true); // Activate the screensaver
     };
 
